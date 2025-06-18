@@ -68,10 +68,30 @@ const userData = [
     { id: 1, userName: 'roshan', displayName: "Roshan"},
     {id: 2, userName :'ashim', displayName: "Ashim"}];
 
-app.get ("/api/users", (request, response)=> {
+// app.get ("/api/users", (request, response)=> {
+//     console.log(request.query);
+//     response.send(userData);
+// })
+
+// app.listen(PORT, ()=> {
+//     console.log(`Running on Port ${PORT}`);
+// });
+
+
+
+//another practice of query params.
+ app.get("/api/users", (request, response)=>{
     console.log(request.query);
-    response.send(userData);
-})
+    const {
+        query: {filter,value},
+    }= request;
+
+    //If filter is present
+    if(filter && value) 
+        return response.send(
+    userData.filter((user)=> user[filter].includes(value)));
+    return response.send(userData);
+});
 
 app.listen(PORT, ()=> {
     console.log(`Running on Port ${PORT}`);
