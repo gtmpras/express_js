@@ -5,14 +5,14 @@ const app = express();
 //adding middleware to parse JSON body
 app.use(express.json());
 
+const userData = [
+    { id: 1, username: 'Prasoon', displayname: "Prasoon Gautam" },
+    { id: 2, username: 'Ashim', displayname: "Ashim Bhandari" }
+]
 const PORT = process.env.PORT || 3000;
 
-const userData = [
-    { id: 1, username: 'roshan', displayname: "Roshan"},
-    {id: 2, username :'ashim', displayname: "Ashim"}];
 
-//using get request here to get all users data
-
+//get request to get all users data according to id
 app.get("/api/users/:id",(request,response)=>{
     console.log(request.params);
     const parsedId = parseInt(request.params.id);
@@ -24,10 +24,15 @@ app.get("/api/users/:id",(request,response)=>{
     return response.send(findUser);
     });
 
-//adding put request here
 
-app.put("/api/users/:id",(request, response)=>{
- const {
+    //to get all the users data 
+    app.get("/api/users", (request, response)=>{
+    response.send(userData);
+});
+
+//adding PATCH request to update user data
+app.patch("/api/users/:id",(request, response)=> {
+const {
     body,
     params:{id},
  }= request;
@@ -36,18 +41,16 @@ app.put("/api/users/:id",(request, response)=>{
 
  if(isNaN(parsedId)) return response.sendStatus(400);
 
- const findUserIndex = userData.findIndex((user)=> user.id === parsedId);
-
+ const findUserIndex = userData.findIndex((user)=> user.id=== parsedId);
  if(findUserIndex === -1) return response.sendStatus(404);
-
  userData[findUserIndex]= {
-    id: parsedId, ...body
+    ...userData[findUserIndex], ...body
  };
-
  return response.sendStatus(200);
 });
 
 
-app.listen(PORT,()=>{
-    console.log(`Running on PORT ${PORT}`);
-})
+
+app.listen(PORT, ()=> {
+console.log(`Running on PORT ${PORT}`);
+});
