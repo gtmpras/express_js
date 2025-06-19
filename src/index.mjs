@@ -77,8 +77,6 @@ const userData = [
 //     console.log(`Running on Port ${PORT}`);
 // });
 
-
-
 //another practice of query params.
  app.get("/api/users", (request, response)=>{
     console.log(request.query);

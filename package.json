@@ -2,11 +2,11 @@
   "name": "express_js",
   "version": "1.0.0",
   "description": "",
-  "main": "index_post.mjs",
+  "main": "index_put.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev":"nodemon ./src/index_post.mjs",
-    "start": "node ./src/index_post.mjs"
+    "start:dev":"nodemon ./src/index_put.mjs",
+    "start": "node ./src/index_put.mjs"
   },
   "keywords": [],
   "author": "",
