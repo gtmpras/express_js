@@ -7,7 +7,9 @@ app.use(express.json());
 
 const userData = [
     { id: 1, username: 'Prasoon', displayname: "Prasoon Gautam" },
-    { id: 2, username: 'Ashim', displayname: "Ashim Bhandari" }
+    { id: 2, username: 'Ashim', displayname: "Ashim Bhandari" },
+    { id: 3, username: 'Roshan', displayname: "Roshan Thapa" }
+
 ]
 const PORT = process.env.PORT || 3000;
 
@@ -50,6 +52,20 @@ const {
 });
 
 
+//delete request to delete user dta
+app.delete("/api/users/:id", (request, response)=>{
+    const {
+        params:{id},
+    }= request;
+
+    const parsedId = parseInt(id);
+
+    if(isNaN(parsedId)) return response.sendStatus(400);
+    const findUserIndex = userData.findIndex((user)=> user.id === parsedId);
+    if(findUserIndex === -1) return response.sendStatus(404);
+    userData.splice(findUserIndex,1);
+    return response.sendStatus(200);
+});
 
 app.listen(PORT, ()=> {
 console.log(`Running on PORT ${PORT}`);
