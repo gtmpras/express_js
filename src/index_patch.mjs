@@ -52,7 +52,6 @@ const {
 });
 
 
-//delete request to delete user dta
 app.delete("/api/users/:id", (request, response)=>{
     const {
         params:{id},

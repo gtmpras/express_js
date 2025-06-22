@@ -59,7 +59,8 @@
 
 //                         //********** */ Let's Dive into Level 3 i.e Query Params////************ */
 import express from 'express';
-
+//importing for validating query params
+import { query, validationResult } from "express-validator";
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -78,8 +79,17 @@ const userData = [
 // });
 
 //another practice of query params.
- app.get("/api/users", (request, response)=>{
-    console.log(request.query);
+ app.get("/api/users",query("filter")
+ .isString()
+ .withMessage("Filter must be a string")
+ .notEmpty()
+ .withMessage("Filter shouldn't be empty")
+ .isLength({min:3, max:20})
+ .withMessage("Filter must be a string with length between 3 and 20 characters"),
+  (request, response)=>{
+    const result = validationResult(request);
+    console.log(result);
+    //console.log(request.query);
     const {
         query: {filter,value},
     }= request;
