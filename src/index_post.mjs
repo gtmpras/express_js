@@ -2,7 +2,8 @@
 import express from 'express';
 
 //importing for validation
-import { query, validationResult, body} from "express-validator";
+import {validationResult, matchedData,checkSchema} from "express-validator";
+import { createUserValidationSchema } from './utlis/validation_schemas.mjs';
 const app = express();
 
 //adding middleware to parse JSON body
@@ -16,22 +17,19 @@ const userData = [
  { id: 1, username: 'prasoon', displayName: 'Prasoon Gautam' },
  { id: 2, username: 'rijan', displayName: 'Rijan Bhat' }
 ]
-app.post('/api/users',body(
-'username'
-
-).notEmpty()
-.withMessage('Username is required')
-.isLength({min: 5, max: 40})
-.withMessage('Username must be between 5 and 40 characters long')
-.isString()
-.withMessage('Username must be a string')
-, (request, response)=>{
+app.post('/api/users',
+checkSchema(createUserValidationSchema),
+(request, response)=>{
 
     const result = validationResult(request);
     console.log(result);
-    console.log(request.body);
-    const {body} = request;
-    const newUser = {id: userData[userData.length -1].id+1, ...body};
+
+    if(!result.isEmpty()) {
+        return response.status(400).json({ errors: result.array() });
+    }
+    const data = matchedData(request);
+    console.log(data);
+    const newUser = {id: userData[userData.length -1].id+1, ...data};
     userData.push(newUser);
     return response.status(201).send(newUser);
 });
