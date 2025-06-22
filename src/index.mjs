@@ -61,13 +61,14 @@
 import express from 'express';
 //importing for validating query params
 import { query, validationResult } from "express-validator";
+import userRouter from './routes/users.mjs';
+import { userData } from './utlis/constants.mjs'; // Importing user data
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-const userData = [
-    { id: 1, userName: 'roshan', displayName: "Roshan"},
-    {id: 2, userName :'ashim', displayName: "Ashim"}];
+app.use(express.json()); // Middleware to parse JSON body
+app.use(userRouter); // Using the user router
 
 // app.get ("/api/users", (request, response)=> {
 //     console.log(request.query);
@@ -77,29 +78,6 @@ const userData = [
 // app.listen(PORT, ()=> {
 //     console.log(`Running on Port ${PORT}`);
 // });
-
-//another practice of query params.
- app.get("/api/users",query("filter")
- .isString()
- .withMessage("Filter must be a string")
- .notEmpty()
- .withMessage("Filter shouldn't be empty")
- .isLength({min:3, max:20})
- .withMessage("Filter must be a string with length between 3 and 20 characters"),
-  (request, response)=>{
-    const result = validationResult(request);
-    console.log(result);
-    //console.log(request.query);
-    const {
-        query: {filter,value},
-    }= request;
-
-    //If filter is present
-    if(filter && value) 
-        return response.send(
-    userData.filter((user)=> user[filter].includes(value)));
-    return response.send(userData);
-});
 
 app.listen(PORT, ()=> {
     console.log(`Running on Port ${PORT}`);
