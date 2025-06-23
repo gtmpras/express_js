@@ -24,30 +24,6 @@ app.get("/api/users/:id",(request,response)=>{
     return response.send(findUser);
     });
 
-//adding put request here
-
-app.put("/api/users/:id",(request, response)=>{
- const {
-    body,
-    params:{id},
- }= request;
-
- const parsedId = parseInt(id);
-
- if(isNaN(parsedId)) return response.sendStatus(400);
-
- const findUserIndex = userData.findIndex((user)=> user.id === parsedId);
-
- if(findUserIndex === -1) return response.sendStatus(404);
-
- userData[findUserIndex]= {
-    id: parsedId, ...body
- };
-
- return response.sendStatus(200);
-});
-
-
 app.listen(PORT,()=>{
     console.log(`Running on PORT ${PORT}`);
 })

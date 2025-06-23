@@ -59,5 +59,37 @@ checkSchema(createUserValidationSchema),
     return response.status(201).send(newUser);
 });
 
+//adding put request here
+
+router.put("/api/users/:id",resolveIndexByUserId, (request, response)=>{
+ const {
+    body,
+    findUserIndex,
+ }= request;
+ userData[findUserIndex] = {id: userData[findUserIndex].id, ...body};
+ return response.sendStatus(200);
+});
+
+//adding PATCH request to update user data
+router.patch("/api/users/:id", resolveIndexByUserId,(request, response)=> {
+const {
+    body,
+    findUserIndex,
+ }= request;
+userData[findUserIndex]= {
+    ...userData[findUserIndex], ...body
+};
+ return response.sendStatus(200);
+});
+
+
+router.delete("/api/users/:id", resolveIndexByUserId,(request, response)=>{
+    const {
+        findUserIndex
+    }= request;
+
+    userData.splice(findUserIndex, 1);
+    return response.sendStatus(200);
+});
 
 export default router;

@@ -60,17 +60,17 @@
 //                         //********** */ Let's Dive into Level 3 i.e Query Params////************ */
 import express from 'express';
 //importing for validating query params
-import { query, validationResult } from "express-validator";
+
 import userRouter from './routes/users.mjs';
-import { userData } from './utils/constants.mjs'; // Importing user data
-import { resolveIndexByUserId} from "./utils/middlewares.mjs";
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
 
 app.use(express.json()); // Middleware to parse JSON body
 app.use(userRouter); // Using the user router
+
+
+const PORT = process.env.PORT || 3000;
 
 // app.get ("/api/users", (request, response)=> {
 //     console.log(request.query);
