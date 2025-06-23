@@ -62,7 +62,9 @@ import express from 'express';
 //importing for validating query params
 import { query, validationResult } from "express-validator";
 import userRouter from './routes/users.mjs';
-import { userData } from './utlis/constants.mjs'; // Importing user data
+import { userData } from './utils/constants.mjs'; // Importing user data
+import { resolveIndexByUserId} from "./utils/middlewares.mjs";
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;

@@ -1,9 +1,16 @@
 
 import {Router} from "express";
-import {query, validationResult} from "express-validator";
-import {userData} from '../utlis/constants.mjs'; // Importing user data
-const router = Router();
+import {query,
+      validationResult,
+      checkSchema, 
+      matchedData} 
+    from "express-validator";
+import {userData} from '../utils/constants.mjs'; // Importing user data
+import {createUserValidationSchema} from '../utils/validation_schemas.mjs'; // Importing validation schema
+import { resolveIndexByUserId} from '../utils/middlewares.mjs';
 
+const router = Router();
+ //router get
  router.get("/api/users",query("filter")
  .isString()
  .withMessage("Filter must be a string")
@@ -26,5 +33,31 @@ const router = Router();
     return response.send(userData);
         }
 );
+
+router.get ("/api/users/:id", resolveIndexByUserId, (request, response)=> {
+    const {findUserIndex} = request;
+    const findUser = userData[findUserIndex];
+    if(!findUser) return response.sendStatus(404);
+    return response.send(findUser);
+})
+
+//router post
+router.post('/api/users',
+checkSchema(createUserValidationSchema),
+(request, response)=>{
+
+    const result = validationResult(request);
+    console.log(result);
+
+    if(!result.isEmpty()) {
+        return response.status(400).json({ errors: result.array() });
+    }
+    const data = matchedData(request);
+    console.log(data);
+    const newUser = {id: userData[userData.length -1].id+1, ...data};
+    userData.push(newUser);
+    return response.status(201).send(newUser);
+});
+
 
 export default router;
