@@ -61,13 +61,12 @@
 import express from 'express';
 //importing for validating query params
 
-import userRouter from './routes/users.mjs';
+import routes from "./routes/index.mjs";
 
 const app = express();
 
-
 app.use(express.json()); // Middleware to parse JSON body
-app.use(userRouter); // Using the user router
+app.use(routes);
 
 
 const PORT = process.env.PORT || 3000;
