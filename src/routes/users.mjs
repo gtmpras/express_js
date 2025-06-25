@@ -19,6 +19,8 @@ const router = Router();
  .isLength({min:3, max:20})
  .withMessage("Filter must be a string with length between 3 and 20 characters"),
   (request, response)=>{
+    console.log(request.session);
+    console.log(request.session.id);
     const result = validationResult(request);
     console.log(result);
     //console.log(request.query);

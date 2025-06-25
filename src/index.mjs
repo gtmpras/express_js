@@ -75,7 +75,11 @@ app.use(session(
     {
         secret:'gtmPras',
         saveUninitialized: false,
-        
+        resave: false,
+        cookie:{
+            maxAge: 60000 * 60, //1 hour 
+
+        }
     }
 ));
 app.use(routes);
@@ -97,6 +101,9 @@ app.listen(PORT, ()=> {
 });
 
 app.get("/", (request,response)=>{
-    response.cookie('hello','world',{maxAge : 10000, signed:true });
+    console.log(request.session);
+    console.log(request.session.id);
+    request.session.visited = true;
+    response.cookie('hello','world',{maxAge : 60000, signed:true });
     response.status(201).send({msg:"Hello"});
 });
