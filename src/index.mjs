@@ -62,10 +62,22 @@ import express from 'express';
 //importing for validating query params
 
 import routes from "./routes/index.mjs";
+//importing cookie parser
+import cookieParser from 'cookie-parser';
+//importing session
+import session from "express-session";
 
 const app = express();
 
 app.use(express.json()); // Middleware to parse JSON body
+app.use(cookieParser("Hello world"));
+app.use(session(
+    {
+        secret:'gtmPras',
+        saveUninitialized: false,
+        
+    }
+));
 app.use(routes);
 
 
@@ -82,4 +94,9 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, ()=> {
     console.log(`Running on Port ${PORT}`);
+});
+
+app.get("/", (request,response)=>{
+    response.cookie('hello','world',{maxAge : 10000, signed:true });
+    response.status(201).send({msg:"Hello"});
 });
