@@ -67,6 +67,8 @@ import cookieParser from 'cookie-parser';
 //importing session
 import session from "express-session";
 
+import { mockUsers } from './utils/constants.mjs';
+
 const app = express();
 
 app.use(express.json()); // Middleware to parse JSON body
@@ -106,4 +108,24 @@ app.get("/", (request,response)=>{
     request.session.visited = true;
     response.cookie('hello','world',{maxAge : 60000, signed:true });
     response.status(201).send({msg:"Hello"});
+});
+
+app.post('/api/auth', (request, response)=>{
+    const {body:{
+        username, password
+    }} = request;
+ const findUser = mockUsers.find((user)=> user.username === username);
+if(!findUser || findUser.password !== password) 
+    return response.status(401).send({msg:'Bad Credentials'});
+
+request.session.user = findUser;
+return response.status(200).send(findUser);
+});
+
+app.get('/api/auth/status', (request, response)=>{
+    request.sessionStore.get(request.sessionID, (err, session)=> {
+        console.log(session);
+    });
+    return request.session.user ? response.status(200).send(request.session.user):
+    response.status(401).send({msg: "Not Authenticated"});
 });
