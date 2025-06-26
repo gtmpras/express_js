@@ -97,7 +97,14 @@ app.use(passport.session());
 app.use(routes);
 
 app.post('/api/auth', passport.authenticate("local"), (request, response)=>{
+response.sendStatus(200);
+});
 
+app.get('/api/auth/status', (request, response)=>{
+    console.log("Inside /auth/status endpoint");
+    console.log(request.user);
+    console.log(request.session);
+    return request.user ? response.send(request.user) : response.sendStatus(401);
 });
 
 
@@ -142,6 +149,15 @@ app.get('/api/auth/status', (request, response)=>{
     });
     return request.session.user ? response.status(200).send(request.session.user):
     response.status(401).send({msg: "Not Authenticated"});
+});
+
+app.post('/api/auth/logout', (request, response)=> {
+  if(!request.user) return response.sendStatus(401);
+
+  request.logout((err)=> {
+    if(err) return response.sendStatus(400);
+    response.send(200);
+  });
 });
 
 app.post('/api/cart',(request, response)=>{
