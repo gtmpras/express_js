@@ -67,6 +67,12 @@ import cookieParser from 'cookie-parser';
 //importing session
 import session from "express-session";
 
+//importing passport for authentication
+import passport from "passport";
+
+import './strategies/local-strategy.mjs';
+
+
 import { mockUsers } from './utils/constants.mjs';
 
 const app = express();
@@ -84,7 +90,15 @@ app.use(session(
         }
     }
 ));
+
+//enabling passport after session middleware
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(routes);
+
+app.post('/api/auth', passport.authenticate("local"), (request, response)=>{
+
+});
 
 
 const PORT = process.env.PORT || 3000;
@@ -147,4 +161,4 @@ app.post('/api/cart',(request, response)=>{
 app.get('/api/cart', (request, response)=> {
     if(!request.session.user )return response.sendStatus(401);
     return response.send(request.session.cart ?? []);
-});
+}); 
