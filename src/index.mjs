@@ -70,12 +70,16 @@ import session from "express-session";
 //importing passport for authentication
 import passport from "passport";
 
+//importing mongodb
+import mongoose from 'mongoose';
+
 import './strategies/local-strategy.mjs';
 
 
 import { mockUsers } from './utils/constants.mjs';
 
 const app = express();
+mongoose.connect('mongodb://localhost/express_db').then(()=> console.log("Connected to Database")).catch((err)=> console.log(`Error: ${err}`));
 
 app.use(express.json()); // Middleware to parse JSON body
 app.use(cookieParser("Hello world"));
