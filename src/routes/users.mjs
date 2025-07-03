@@ -8,6 +8,8 @@ import {query,
 import {userData} from '../utils/constants.mjs'; // Importing user data
 import {createUserValidationSchema} from '../utils/validation_schemas.mjs'; // Importing validation schema
 import { resolveIndexByUserId} from '../utils/middlewares.mjs';
+//importing mongoose User model
+import {User} from '../mongoose/schema/user.mjs'
 
 const router = Router();
  //router get
@@ -44,22 +46,33 @@ router.get ("/api/users/:id", resolveIndexByUserId, (request, response)=> {
 })
 
 //router post
-router.post('/api/users',
-checkSchema(createUserValidationSchema),
-(request, response)=>{
-
-    const result = validationResult(request);
-    console.log(result);
-
-    if(!result.isEmpty()) {
-        return response.status(400).json({ errors: result.array() });
+router.post('/api/users',async (request, response)=> {
+    const {body} = request;
+    const newUser = new User(body);
+    try{
+        const savedUser = await newUser.save();
+        return response.status(201).send(savedUser);
     }
-    const data = matchedData(request);
-    console.log(data);
-    const newUser = {id: userData[userData.length -1].id+1, ...data};
-    userData.push(newUser);
-    return response.status(201).send(newUser);
-});
+    catch(err){
+        console.log(err);
+        return response.sendStatus(400);
+    }
+    });
+// checkSchema(createUserValidationSchema),
+// (request, response)=>{
+
+//     const result = validationResult(request);
+//     console.log(result);
+
+//     if(!result.isEmpty()) {
+//         return response.status(400).json({ errors: result.array() });
+//     }
+//     const data = matchedData(request);
+//     console.log(data);
+//     const newUser = {id: userData[userData.length -1].id+1, ...data};
+//     userData.push(newUser);
+//     return response.status(201).send(newUser);
+// });
 
 //adding put request here
 
