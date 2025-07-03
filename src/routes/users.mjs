@@ -46,9 +46,12 @@ router.get ("/api/users/:id", resolveIndexByUserId, (request, response)=> {
 })
 
 //router post
-router.post('/api/users',async (request, response)=> {
-    const {body} = request;
-    const newUser = new User(body);
+router.post('/api/users',checkSchema(createUserValidationSchema), async (request, response)=> {
+    const result = validationResult(request);
+    if(!result.isEmpty()) return response.send(result.array());
+
+    const data = matchedData(request);
+    const newUser = new User(data);
     try{
         const savedUser = await newUser.save();
         return response.status(201).send(savedUser);
@@ -57,7 +60,8 @@ router.post('/api/users',async (request, response)=> {
         console.log(err);
         return response.sendStatus(400);
     }
-    });
+});
+
 // checkSchema(createUserValidationSchema),
 // (request, response)=>{
 
